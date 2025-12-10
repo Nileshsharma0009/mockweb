@@ -45,28 +45,24 @@
     "answer": 2
   },
   {
-    "paragraph": "The city of Greenhaven has faced rapid urbanization in recent years, which has brought with it several environmental concerns. Among the most pressing issues is air pollution, largely due to an increase in car usage. Factories have also contributed significantly to the deteriorating air quality, releasing large amounts of carbon dioxide and other harmful gases into the atmosphere. With more vehicles on the road and industrial zones expanding, the air quality has reached dangerous levels. Additionally, the construction of new buildings has led to the destruction of green spaces, further exacerbating the situation. The city government has implemented a few measures to curb pollution, such as introducing cleaner public transport and setting up stricter regulations on industrial emissions. However, the residents feel that these efforts are not enough. Many citizens have begun advocating for more green spaces and cleaner energy alternatives to reduce the overall environmental impact. Experts warn that without drastic measures, Greenhaven could face long-term consequences like widespread health issues and a drop in quality of life The city of Greenhaven has faced rapid urbanization in recent years, which has brought with it several environmental concerns. Among the most pressing issues is air pollution, largely due to an increase in car usage. Factories have also contributed significantly to the deteriorating air quality, releasing large amounts of carbon dioxide and other harmful gases into the atmosphere. With more vehicles on the road and industrial zones expanding, the air quality has reached dangerous levels. Additionally, the construction of new buildings has led to the destruction of green spaces, further exacerbating the situation. The city government has implemented a few measures to curb pollution, such as introducing cleaner public transport and setting up stricter regulations on industrial emissions. However, the residents feel that these efforts are not enough. Many citizens have begun advocating for more green spaces and cleaner energy alternatives to reduce the overall environmental impact. Experts warn that without drastic measures, Greenhaven could face long-term consequences like widespread health issues and a drop in quality of lif.",
-    "question": "What is the main cause of air pollution in Greenhaven?",
+    "question": "Which sentence is in active voice?",
     "options": [
-      "Overpopulation",
-      "Increased vehicular traffic",
-      "Heavy rainfall",
-      "Natural disasters"
+      "The cat was chased by the dog.",
+      "Hockey was played by Ram.",
+      "The boy was bitten by the dog.",
+      "Ram played hockey."
     ],
-    "answer": 1,
-    "groupId": "greenhaven"
+    "answer": 3
   },
   {
-    "paragraph": "The city of Greenhaven has faced rapid urbanization in recent years, which has brought with it several environmental concerns. Among the most pressing issues is air pollution, largely due to an increase in car usage. Factories have also contributed significantly to the deteriorating air quality, releasing large amounts of carbon dioxide and other harmful gases into the atmosphere. With more vehicles on the road and industrial zones expanding, the air quality has reached dangerous levels. Additionally, the construction of new buildings has led to the destruction of green spaces, further exacerbating the situation. The city government has implemented a few measures to curb pollution, such as introducing cleaner public transport and setting up stricter regulations on industrial emissions. However, the residents feel that these efforts are not enough. Many citizens have begun advocating for more green spaces and cleaner energy alternatives to reduce the overall environmental impact. Experts warn that without drastic measures, Greenhaven could face long-term consequences like widespread health issues and a drop in quality of life.",
-    "question": "Which of the following is contributing to the poor air quality in the city?",
-    "options": [
-      "Excessive rainfall",
-      "Industrial emissions",
-      "Agricultural practices",
-      "Overfishing"
-    ],
-    "answer": 1,
-    "groupId": "greenhaven"
+    "question": "Fill in the blank with the correct preposition: She is interested ___ music.",
+    "options": ["at", "to", "for", "in"],
+    "answer": 3
+  },
+  {
+    "question": "Choose the sentence with the correct question tag: You have done your homework, _____?",
+    "options": ["haven't you?", "have you?", "isn't it?", "did you?"],
+    "answer": 0
   },
   {
     "question": "Add a question tag: The girl is playing the piano, ____?",

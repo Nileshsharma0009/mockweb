@@ -1,14 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTestState, useTestDispatch } from "../context/TestContext.jsx";
 
 export default function QuestionPanel() {
   const state = useTestState();
   const dispatch = useTestDispatch();
+  const [showFullImage, setShowFullImage] = useState(false);
+  const [showFullParagraph, setShowFullParagraph] = useState(false);
 
   const setSelected = (i) => dispatch({ type: "SET_SELECTED", payload: i });
 
-  const currentSet = state.currentSection === "A" ? state.fullSetA : state.fullSetB;
-  const sel = state.currentSection === "A" ? state.selectedOptionsA[state.currentIndex] : state.selectedOptionsB[state.currentIndex];
+  const currentSet =
+    state.currentSection === "A" ? state.fullSetA : state.fullSetB;
+  const sel =
+    state.currentSection === "A"
+      ? state.selectedOptionsA[state.currentIndex]
+      : state.selectedOptionsB[state.currentIndex];
+
   const q = currentSet[state.currentIndex] || null;
 
   // Keyboard shortcuts: A/B/C/D to pick options; Left/Right for nav
@@ -30,7 +37,11 @@ export default function QuestionPanel() {
   }, [q, dispatch]);
 
   if (!q) {
-    return <div id="questionsPanel" className="mt-24 p-8 text-center text-gray-500">Loading questions...</div>;
+    return (
+      <div id="questionsPanel" className="mt-24 p-8 text-center text-gray-500">
+        Loading questions...
+      </div>
+    );
   }
 
   return (
@@ -43,20 +54,85 @@ export default function QuestionPanel() {
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
           Question {state.currentIndex + 1} of {state.totalQuestions}
         </h2>
-  
-        {/* Optional paragraph (like reading passage) */}
         {q.paragraph && (
-          <div className="mb-6 p-4 bg-gray-50 rounded-md text-gray-700 shadow-sm leading-relaxed"> 
-          style={{ width: "200px" }}
-            {q.paragraph}
+          <div className="mb-6">
+            {/* Compact paragraph box */}
+            <div className="p-4 bg-gray-50 rounded-md text-gray-700 shadow-sm leading-relaxed max-h-40 overflow-hidden relative">
+              <p className="line-clamp-4">{q.paragraph}</p>
+
+              {/* Fade effect (bottom gradient) */}
+              <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-gray-50 to-transparent"></div>
+            </div>
+
+            {/* Show full paragraph button */}
+            <button
+              onClick={() => setShowFullParagraph(true)}
+              className="mt-2 text-sm font-medium text-violet-700 hover:text-violet-900"
+            >
+              Show Full Paragraph
+            </button>
           </div>
         )}
-  
+
+        {showFullParagraph && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white w-[90%] max-w-2xl max-h-[80vh] rounded-xl shadow-xl p-6 overflow-auto">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">
+                Reading Passage
+              </h3>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                {q.paragraph}
+              </p>
+
+              <div className="mt-6 text-right">
+                <button
+                  onClick={() => setShowFullParagraph(false)}
+                  className="px-4 py-2 rounded-md bg-violet-600 text-white hover:bg-violet-700"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Optional image (diagram / reaction / circuit etc.) */}
+        {q.image && (
+          <div className="flex justify-center items-center mt-2 mb-4">
+            <div className="flex justify-center items-center border border-gray-200 rounded-lg shadow-sm w-[350px] h-[250px] bg-white overflow-hidden">
+              <img
+                src={q.image}
+                alt="Question diagram"
+                className="object-contain w-full h-full cursor-pointer"
+                onClick={() => setShowFullImage(true)}
+              />
+            </div>
+          </div>
+        )}
+
+        {showFullImage && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="relative">
+              <img
+                src={q.image}
+                alt="Full diagram"
+                className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-lg"
+              />
+              <button
+                onClick={() => setShowFullImage(false)}
+                className="absolute top-3 right-3 bg-white text-black px-3 py-1 rounded-md shadow font-semibold"
+              >
+                ✕ 
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Question text */}
-        <p className="mb-20 text-lg text-gray-800 leading-relaxed">
+        <p className="mb-8 text-lg text-gray-800 leading-relaxed">
           {q.question}
         </p>
-  
+
         {/* Options grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {q.options.map((opt, idx) => {
@@ -68,14 +144,17 @@ export default function QuestionPanel() {
                 className={`
                   flex items-center gap-3 px-4 py-3 w-full rounded-xl border-2 
                   transition-all duration-200 font-medium text-left
-                  ${isSelected
-                    ? "bg-violet-100 border-violet-600 text-violet-900 shadow-sm"
-                    : "bg-violet-50 hover:bg-violet-100 border-violet-200 text-gray-800 hover:border-violet-400"
+                  ${
+                    isSelected
+                      ? "bg-violet-100 border-violet-600 text-violet-900 shadow-sm"
+                      : "bg-violet-50 hover:bg-violet-100 border-violet-200 text-gray-800 hover:border-violet-400"
                   }
                 `}
                 aria-pressed={isSelected}
               >
-                <span className="text-violet-800 font-semibold">{String.fromCharCode(65 + idx)})</span>
+                <span className="text-violet-800 font-semibold">
+                  {String.fromCharCode(65 + idx)})
+                </span>
                 <span className="text-base">{opt}</span>
               </button>
             );
@@ -84,5 +163,4 @@ export default function QuestionPanel() {
       </div>
     </main>
   );
-  
 }

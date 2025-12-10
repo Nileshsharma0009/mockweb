@@ -8,7 +8,11 @@ import QuestionPanel from "./components/QuestionPanel";
 import Sidebar from "./components/Sidebar";
 import ControlsBar from "./components/ControlsBar";
 import StatsToggleFab from "./components/StatsToggleFab";
-import { shuffle } from "./utils/shuffle";
+import { shuffleWithGroups } from "./utils/shuffle"; // ✅ use group-aware shuffle 
+
+
+
+
 
 function TestPageInner() {
   const state = useTestState();
@@ -59,16 +63,11 @@ function TestPageInner() {
     // store mock test name dynamically based on mock ID
     localStorage.setItem("mockTestName", `IMU Mock Test ${mockId}`);
 
-    // ensure userData exists (your registration flow should set this earlier)
-    // we simply preserve it if present
     const existingUser = localStorage.getItem("userData");
     if (!existingUser) {
-      // optional fallback if you want to auto-fill a minimal object:
-      // localStorage.setItem("userData", JSON.stringify({ name: "Unknown", email: "" }));
       console.warn("userData not found in localStorage — ResultPage may show missing user info.");
     }
 
-    // navigate to SPA result route
     navigate("/result");
   }, [state.fullSetA, state.fullSetB, state.selectedOptionsA, state.selectedOptionsB, navigate, mockId]);
 
@@ -80,26 +79,29 @@ function TestPageInner() {
 
     fetch(`/imu${mock}.json`)
       .then((r) => {
-        if (!r.ok) throw new Error("Failed to fetch questions JSON");
+        if (!r.ok) {
+          throw new Error(`Failed to fetch questions JSON: ${r.status} ${r.statusText}. Make sure imu${mock}.json exists in the public folder.`);
+        }
         return r.json();
       })
       .then((data) => {
-        const englishA = shuffle(data.A?.english || []);
-        const gkA = shuffle(data.A?.gk || []);
-        const aptA = shuffle(data.A?.apptitude || []);
+        // ✅ use shuffleWithGroups so paragraph blocks stay together
+        const englishA = shuffleWithGroups(data.A?.english || []);
+        const gkA = shuffleWithGroups(data.A?.gk || []);
+        const aptA = shuffleWithGroups(data.A?.apptitude || []);
         const fullA = [...englishA, ...gkA, ...aptA].slice(0, state.totalQuestions);
 
-        const phy = shuffle(data.B?.physics || []);
-        const maths = shuffle(data.B?.maths || []);
-        const che = shuffle(data.B?.chemistry || []);
+        const phy = shuffleWithGroups(data.B?.physics || []);
+        const maths = shuffleWithGroups(data.B?.maths || []);
+        const che = shuffleWithGroups(data.B?.chemistry || []);
         const fullB = [...phy, ...maths, ...che].slice(0, state.totalQuestions);
 
         dispatch({ type: "SET_QUESTIONS", payload: { A: fullA, B: fullB } });
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
-        alert("Failed to load questions JSON");
+        console.error("Error loading questions:", err);
+        alert(`Failed to load questions JSON: ${err.message}\n\nPlease check:\n1. The file imu${mock}.json exists in the public folder\n2. The JSON file has valid syntax\n3. The server is running correctly`);
         setLoading(false);
       });
   }, [dispatch, state.totalQuestions]);
@@ -109,7 +111,6 @@ function TestPageInner() {
     const onCopy = (e) => {
       e.preventDefault();
       if (e.clipboardData) e.clipboardData.setData("text/plain", "Copying disabled on this page.");
-      // lightweight UX note rather than noisy repeated alerts in production
       alert("Copying is disabled on the test page.");
     };
     document.addEventListener("copy", onCopy);
@@ -145,6 +146,7 @@ function TestPageInner() {
       ) : (
         <>
           <QuestionPanel />
+          
           <StatsToggleFab open={statsOpen} onToggle={() => setStatsOpen((v) => !v)} />
           <Sidebar visible={statsOpen} />
           <ControlsBar onSubmit={handleSubmit} />
